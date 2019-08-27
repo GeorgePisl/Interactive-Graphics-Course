@@ -1,0 +1,138 @@
+<html>
+
+<head>
+	<title>Runner</title>
+	<meta charset="utf-8" />
+	<style>
+		@font-face {
+			font-family: xcelsionpunch;
+			src: url("fonts/xcelsionpunch.otf") format("opentype");
+			font-style: normal;
+			font-weight: bold;
+		}
+
+		@font-face {
+			font-family: VIDEOPHREAK;
+			src: url("fonts/VIDEOPHREAK.ttf") format("opentype");
+			font-style: normal;
+			font-weight: bold;
+		}
+
+
+		#rcorners2 {
+			border-radius: 25px;
+			background: url(images/classic-gif.gif);
+			background-size: contain;
+			margin-left: 50px;
+			margin-right: 50px;
+			margin-top: -40px;
+			border: 20px solid rgba(255, 255, 0, 1.1);
+			width: 300px;
+			height: 400px;
+		}
+
+		#rcorners3 {
+			border-radius: 25px;
+			background: url(images/arcade-gif.gif);
+			background-size: contain;
+			margin-left: 50px;
+			margin-right: 50px;
+			margin-top: -40px;
+			border: 20px solid rgba(0, 0, 255, 1.1);
+			width: 300px;
+			height: 400px;
+		}
+
+		img {
+			border-radius: 25px;
+		}
+
+		#block_container {
+			display: flex;
+			justify-content: center;
+		}
+
+		body {
+			width: 100%;
+			height: 100%;
+			position: fixed;
+			background: url("images/clouds.jpg");
+			-webkit-background-size: cover;
+			-moz-background-size: cover;
+			-o-background-size: cover;
+			background-size: cover;
+
+		}
+
+		button {
+			font-size: 30pt;
+			font-family: 'VIDEOPHREAK';
+			text-align: center;
+			font-weight: bold;
+			margin-left: 130px;
+			margin-right: 130px;
+			padding: 10px 0 10px 10px;
+			background-color: lightgray;
+			text-shadow: -1px -1px black, 1px 1px white;
+			color: gray;
+			-webkit-border-radius: 7px;
+			-moz-border-radius: 7px;
+			-o-border-radius: 7px;
+			border-radius: 7px;
+			box-shadow: 0 .2em gray;
+			cursor: pointer;
+		}
+
+		.button:active {
+			box-shadow: none;
+			position: relative;
+			top: .2em;
+		}
+
+		#block_container {
+			text-align: center;
+		}
+
+		#bloc1,
+		#bloc2 {
+			display: inline;
+		}
+	</style>
+
+</head>
+
+<body>
+
+	<center>
+		<font face="xcelsionpunch"><b>
+				<p style="
+	color: #DF601D;
+	background: none; font-size: 72pt;
+	margin-top: -5px;">Runner</p>
+			</b></font>
+	</center>
+
+	<div id="block_container">
+		<div id="rcorners2"> </div>
+		<div id="rcorners3"> </div>
+	</div>
+
+	<div id="block_container">
+		<button onclick="button1()"> CLASSIC </button>
+		<button onclick="button2()"> ARCADE </button>
+	</div>
+
+	<script>
+		function button1() {
+			window.localStorage["booleanMode"] = "true";
+			window.location.replace("src/main.html");
+		}
+
+		function button2() {
+			window.localStorage["booleanMode"] = "false";
+			window.location.replace("src/main.html");
+		}
+	</script>
+</body>
+
+</html>

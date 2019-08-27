@@ -1,0 +1,78 @@
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+}
+
+#container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.panelScore {
+  background: transparent;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 2em 3em;
+  width: 15%;
+  z-index: 1;
+}
+
+.panelGame {
+  background: transparent;
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 2em 3em;
+  width: 25%;
+  z-index: 1;
+}
+
+.panelGame p {
+  width: 100%;
+  font-family: 'Playfair Display';
+  font-size: 1.5em;
+  color: white;
+  font-weight: bold;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.panelGame label {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 2em;
+  width: 100%;
+  color: white;
+  font-weight: bold;
+}
+
+.stat {
+  margin-top: 2em;
+  text-align: center;
+}
+
+.stat p {
+  width: 100%;
+  text-align: center;
+  font-family: 'Playfair Display';
+  font-size: 2em;
+  color: white;
+  font-weight: bold;
+}
+
+.stat label {
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.25em;
+  font-size: 2em;
+  width: 100%;
+  color: white;
+  font-weight: bold;
+}

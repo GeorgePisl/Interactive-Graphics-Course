@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+  <style>
+    .slidecontainer {
+      width: 100%;
+    }
+
+    .slider {
+      -webkit-appearance: none;
+      width: 45%;
+      height: 20px;
+      border-radius: 5px;
+      background: #d3d3d3;
+      outline: none;
+      opacity: 0.7;
+      -webkit-transition: .2s;
+      transition: opacity .2s;
+    }
+
+    .slider:hover {
+      opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #4CAF50;
+      cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: #4CAF50;
+      cursor: pointer;
+    }
+  </style>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    /* Create four equal columns that floats next to each other */
+    .column {
+      float: left;
+      width: 25%;
+      padding: 10px;
+    }
+
+    /* Clear floats after the columns */
+    .row:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  </style>
+
+  <style>
+    .button {
+      background-color: #4CAF50;
+      /* Green */
+      border: 1px solid green;
+      color: white;
+      padding: 10px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 14px;
+      cursor: pointer;
+      float: center;
+    }
+
+    .button:hover {
+      background-color: #3e8e41
+    }
+
+    .button:active {
+      background-color: #3e8e41;
+      box-shadow: 0 5px #666;
+      transform: translateY(4px);
+    }
+  </style>
+
+  <form id="myForm">
+
+    <div class="row">
+      <div class="column" style="background-color:#EAECEE;">
+        <h2> Viewing position </h2>
+        <div>
+          Theta -90<input id="thetaSlider" class="slider" type="range" min="-90" max="90" step="5" value="0" />
+          90
+        </div>
+        <div>
+          Phi -90<input id="phiSlider" class="slider" type="range" min="-90" max="90" step="5" value="0" />
+          90
+        </div>
+        <div>
+          Radius 1<input id="radiusSlider" class="slider" type="range" min="1" max="2" step="0.1" value="1.5" />
+          2
+        </div>
+      </div>
+
+      <div class="column" style="background-color:#D5D8DC;">
+        <h2> Projections </h2>
+        <div>
+          Perspective Fovy 10<input id="fovySlider" class="slider" type="range" min="50" max="200" step="5" value="125" />
+          150
+        </div>
+        <div>
+          Perspective Aspect 0.5<input id="aspectSlider" class="slider" type="range" min="0.1" max="1" step="0.1" value="0.5" />
+          2
+        </div>
+        <div>
+          Far Plane 1<input id="farSlider" class="slider" type="range" min="1" max="10" step="0.1" value="3" />
+          10
+        </div>
+        <div>
+          Near Plane 0.5<input id="nearSlider" class="slider" type="range" min="0.1" max="3" step="0.1" value="0.3" />
+          3
+        </div>
+        <div>
+          Orthogonal Width 0<input id="widthSlider" class="slider" type="range" min="0" max="20" step="1" value="10" />
+          20
+        </div>
+        <div>
+          Orthogonal Height 0<input id="heightSlider" class="slider" type="range" min="0" max="20" step="1" value="10" />
+          20
+        </div>
+      </div>
+
+      <div class="column" style="background-color:#ABB2B9;">
+        <h2> Tranlation and Scaling </h2>
+        <div>
+          Scale 0.1<input id="scaleSlider" class="slider" type="range" min="0.1" max="1.5" step="0.2" value="0.7" />
+          1.5
+        </div>
+        <div>
+          Translate x -2<input id="translateX" class="slider" type="range" min="-2" max="2" step="0.1" value="0" />
+          +2
+        </div>
+        <div>
+          Translate y -2<input id="translateY" class="slider" type="range" min="-2" max="2" step="0.1" value="0" />
+          +2
+        </div>
+        <div>
+          Translate z -2<input id="translateZ" class="slider" type="range" min="-2" max="2" step="0.1" value="0" />
+          +2
+        </div>
+      </div>
+    </div>
+
+    <div class="button-group">
+      <button class="button" id="ButtonReset">Reset Parameters</button>
+    </div>
+  </form>
+  <div>
+    <button class="button" id="ShadingButton">Change Shading</button>
+  </div>
+
+</head>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+precision mediump float;
+attribute  vec4 vPosition;
+attribute vec4 vColor;
+varying vec4 fColor;
+
+//light parameters
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform vec4 lightPosition;
+uniform float shininess;
+attribute vec4 vNormal;
+varying vec3 N,L,E;
+uniform bool changeShading;
+
+//projection and viewing matrices
+uniform mat4 translateMatrix;
+uniform mat4 scaleMatrix;
+uniform mat4 modelView;
+uniform mat4 projection;
+
+//texture
+attribute  vec2 vTexCoord;
+varying vec2 fTexCoord;
+
+
+void main()
+{
+    vec3 pos = -(modelView * vPosition).xyz;
+
+    //fixed light postion
+        if(changeShading){
+          vec3 light = lightPosition.xyz;
+          vec3 H = normalize( L + E );
+
+          L = normalize( light - pos );
+          E = normalize( -pos );
+          N = normalize( (modelView*vNormal).xyz);
+
+          // Compute terms in the illumination equation
+          vec4 ambient = ambientProduct;
+
+          float Kd = max( dot(L, N), 0.0 );
+          vec4  diffuse = Kd*diffuseProduct;
+
+          float Ks = pow( max(dot(N, H), 0.0), shininess );
+          vec4  specular = Ks * specularProduct;
+
+          if( dot(L, N) < 0.0 ) {
+    	       specular = vec4(0.0, 0.0, 0.0, 1.0);
+           }
+
+           fColor = ambient + diffuse + specular;
+           fColor.a = 1.0;
+           fTexCoord = vTexCoord;
+           gl_Position = translateMatrix*scaleMatrix*projection*modelView*vPosition;
+         }else{
+           vec3 light = lightPosition.xyz;
+                  vec3 H = normalize( L + E );
+                  L = normalize( light - pos );
+                  E = normalize( -pos );
+                  N = normalize( (modelView*vNormal).xyz);
+                  fTexCoord = vTexCoord;
+                 gl_Position = translateMatrix*scaleMatrix*projection*modelView*vPosition;
+         }
+}
+</script>
+
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+precision mediump float;
+varying  vec4 vPosition;
+varying vec4 vColor;
+varying vec4 fColor;
+
+//light parameters
+uniform vec4 ambientProduct, diffuseProduct, specularProduct;
+uniform vec4 lightPosition;
+uniform float shininess;
+varying vec4 vNormal;
+varying vec3 N, L, E;
+uniform bool changeShading;
+
+//projection and viewing matrices
+uniform mat4 translateMatrix;
+uniform mat4 scaleMatrix;
+uniform mat4 modelView;
+uniform mat4 projection;
+
+//texture
+varying  vec2 fTexCoord;
+uniform sampler2D Tex0;
+uniform sampler2D Tex1;
+
+void main()
+{
+  if(changeShading) {  gl_FragColor = fColor*(texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));}
+  else {vec4 fColor;
+      vec3 H = normalize( L + E );
+      vec4 ambient = ambientProduct;
+      float Kd = max( dot(L, N), 0.0 );
+      vec4 diffuse = Kd*diffuseProduct;
+      float Ks = pow( max(dot(N, H), 0.0), shininess );
+      vec4 specular = Ks * specularProduct;
+
+      if( dot(L, N) < 0.0 ) specular = vec4(0.0, 0.0, 0.0, 1.0);
+
+      fColor = ambient + diffuse +specular;
+      fColor.a = 1.0;
+      gl_FragColor = fColor*(texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));
+    }
+
+}
+</script>
+
+<script type="text/javascript" src="Common/webgl-utils.js"></script>
+<script type="text/javascript" src="Common/initShaders.js"></script>
+<script type="text/javascript" src="Common/MV.js"></script>
+<script type="text/javascript" src="homework1.js"></script>
+
+<body>
+
+  <canvas id="gl-canvas" width="1024" height="1024">
+    Oops ... your browser doesn't support the HTML5 canvas element
+  </canvas>
+</body>
+
+</html>

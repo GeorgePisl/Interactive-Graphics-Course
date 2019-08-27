@@ -1,0 +1,63 @@
+﻿
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta charset="utf-8" />
+  <title>Game</title>
+  <link href="style.css" rel="stylesheet">
+
+  <style>
+    @font-face {
+      font-family: VIDEOPHREAK;
+      src: url("../fonts/VIDEOPHREAK.ttf") format("opentype");
+      font-style: normal;
+      font-weight: bold;
+    }
+
+    @font-face {
+      font-family: webpixel bitmap_regular;
+      src: url("../fonts/webpixel bitmap_regular.otf") format("opentype");
+      font-style: normal;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body onload="changeColorScore();">
+  <div class="panelGame">
+    <div class="stat">
+      <label id="controls" style="font-family:VIDEOPHREAK;">Press any button to start</label>
+      <p id="list" style="font-family:webpixel bitmap_regular;"></p>
+    </div>
+  </div>
+  <div class="panelScore">
+    <div class="stat">
+      <label id="labelscore" style="font-family:VIDEOPHREAK;">Score</label>
+      <p id="score" style="font-family:VIDEOPHREAK;">0</p>
+    </div>
+  </div>
+  <div id="container"></div>
+</body>
+
+
+<script>
+  function changeColorScore() {
+    if (window.localStorage["booleanMode"] == "true") {
+      document.getElementById('score').style.color = "black";
+      document.getElementById('controls').style.color = "black";
+      document.getElementById('list').style.color = "black";
+      document.getElementById('labelscore').style.color = "black";
+    } else {
+      document.getElementById('score').style.color = "white";
+      document.getElementById('controls').style.color = "white";
+      document.getElementById('list').style.color = "white";
+      document.getElementById('labelscore').style.color = "white";
+    }
+  }
+</script>
+<script type="text/javascript" src="three.min.js"></script>
+<script type="text/javascript" src="game.js"></script>
+
+</html>

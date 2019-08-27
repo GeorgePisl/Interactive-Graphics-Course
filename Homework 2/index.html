@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<script id="vertex-shader" type="x-shader/x-vertex">
+
+attribute  vec4 vPosition;
+attribute vec4 vColor;
+varying vec4 fColor;
+
+uniform mat4 modelViewMatrix;
+uniform mat4 projectionMatrix;
+
+uniform bool flagHorseTexture;
+uniform bool flagObstacleTexture;
+uniform bool flagObstacleColore;
+
+//texture
+attribute  vec2 vTexCoord;
+varying vec2 fTexCoord;
+
+
+void main(){
+    fColor = vColor;
+    fTexCoord = vTexCoord;
+    gl_Position = projectionMatrix * modelViewMatrix * vPosition;
+}
+
+</script>
+
+<script id="fragment-shader" type="x-shader/x-fragment">
+
+  precision mediump float;
+
+varying vec4 fColor;
+varying  vec2 fTexCoord;
+
+uniform bool flagHorseTexture;
+uniform bool flagObstacleTexture;
+uniform bool flagObstacleColore;
+
+uniform sampler2D Tex0;
+uniform sampler2D Tex1;
+
+void main(){
+
+  //check the flags and apply the desired texture and color
+  if(flagHorseTexture == true){
+     gl_FragColor = vec4(0.6, 0.0, 0.0, 1.0)*(texture2D(Tex0, fTexCoord)*texture2D(Tex1, fTexCoord));
+  }
+  else{
+    if(flagObstacleTexture == true){
+      gl_FragColor = vec4(0.5, 0.5, 0.5, 1.0)*(texture2D(Tex0, fTexCoord));
+    }else if(flagObstacleColore == true){
+      gl_FragColor = vec4(0.1, 0.5, 0.3, 1.0);
+    }else{
+      gl_FragColor = vec4(0.5, 0.1, 0.0, 1.0);
+    }
+  }
+}
+
+
+</script>
+
+
+<script type="text/javascript" src="./Common/webgl-utils.js"></script>
+<script type="text/javascript" src="./Common/initShaders.js"></script>
+<script type="text/javascript" src="./Common/MV.js"></script>
+<script type="text/javascript" src="Homework2.js"></script>
+
+<style>
+  .button {
+    background-color: #4CAF50;
+    /* Green */
+    border: 1px solid green;
+    color: white;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+    float: center;
+  }
+
+  .button:hover {
+    background-color: #3e8e41
+  }
+
+  .button:active {
+    background-color: #3e8e41;
+    box-shadow: 0 5px #666;
+    transform: translateY(4px);
+  }
+</style>
+
+<div>
+<button class="button" id="runButton">Start Animation</button>
+<button class="button" value="Refresh Page" onClick="window.location.reload();">Reset</button>
+<button class="button" id="upsideVision">Upside Vision</button>
+<button class="button" id="lateralVision">Lateral Vision</button>
+<button class="button" id="frontVision">Front Vision</button>
+<button class="button" id="vision1">Vision 1</button>
+<button class="button" id="vision2">Vision 2</button>
+</div>
+
+
+</script>
+
+
+<body>
+  <canvas id="gl-canvas" width="1200"" height=" 700">
+    Oops ... your browser doesn't support the HTML5 canvas element
+  </canvas>
+</body>
+
+</html>
